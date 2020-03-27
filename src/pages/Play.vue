@@ -45,7 +45,7 @@
         <tr v-for="item in Object.values(currentGame.gameStats.totalScore)" :key="item.uid">
           <td>{{item.displayName}}</td>
           <td>{{item.score}}</td>
-          <td>{{Object.keys(currentGame.currentRound.playersAnwsered[item.uid].likedby).length}}</td>
+          <td>{{(currentGame.currentRound.playersAnwsered[item.uid].likedby ? Object.keys(currentGame.currentRound.playersAnwsered[item.uid].likedby).length : 0)}}</td>
         </tr>
       </table>
       <button v-if="currentGame.createdBy === user.data.uid" @click="submitLike()">Play Next Round</button>
