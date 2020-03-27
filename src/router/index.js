@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import Login from '../pages/Login.vue';
 import Home from '../pages/Home.vue';
 import Start from '../pages/Start.vue';
+import Join from  '../pages/Join.vue';
 Vue.use(Router)
 
 const router = new Router({
@@ -23,6 +24,11 @@ const router = new Router({
         path: '/start',
         name: 'start',
         component: Start
+    },
+    {
+        path: '/join',
+        name: 'join',
+        component: Join
     }
 
 ]

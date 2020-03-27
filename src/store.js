@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-
+import {gameSessionRef} from './firebaseConfig';
 Vue.use(Vuex)
 
 export const store = new Vuex.Store({
@@ -59,7 +59,10 @@ export const store = new Vuex.Store({
           });
         },
         fetchGame({commit}, data) {
-          commit("SET_GAME",data)
+          gameSessionRef.child(data.gameId).on('value',snapshot=> {
+            commit("SET_GAME",snapshot.val());
+          })
+          commit("SET_GAME",data.gameData)
         }
       }
 })

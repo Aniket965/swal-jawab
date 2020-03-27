@@ -9,10 +9,10 @@ Vue.config.productionTip = false;
 
 firebase.auth.onAuthStateChanged(async user => {
   store.dispatch("fetchUser", user);
-  let details = await (await firebase.usersCollection.doc(user.uid).get()).data();
-  store.dispatch('fetchCurrentGameDetails', details)
     if (user) {
       // User is signed in.
+      let details = await (await firebase.usersCollection.doc(user.uid).get()).data();
+      store.dispatch('fetchCurrentGameDetails', details)
       router.replace('home');
     } else {
       // No user is signed in.
