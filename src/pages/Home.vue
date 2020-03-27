@@ -31,6 +31,7 @@ export default {
       let gameObject = (await gameSessionRef.orderByChild('code').equalTo(code).once('value')).val();
       const gameId = Object.keys(gameObject)[0];
       this.fetchGame({gameData:gameObject[gameId],gameId});
+      // only push if player is not already present
       await gameSessionRef.child(gameId+"/players").push({
         displayName:this.user.data.displayName,
         uid:this.user.data.uid

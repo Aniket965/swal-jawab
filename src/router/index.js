@@ -4,6 +4,7 @@ import Login from '../pages/Login.vue';
 import Home from '../pages/Home.vue';
 import Start from '../pages/Start.vue';
 import Join from  '../pages/Join.vue';
+import Play from '../pages/Play.vue';
 Vue.use(Router)
 
 const router = new Router({
@@ -29,6 +30,11 @@ const router = new Router({
         path: '/join',
         name: 'join',
         component: Join
+    },
+    {
+        path: '/play',
+        name: 'play',
+        component: Play
     }
 
 ]
