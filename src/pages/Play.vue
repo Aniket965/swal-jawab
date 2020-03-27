@@ -2,6 +2,7 @@
   <div id="play-page">
     <button @click="signOut()">logout</button>
     <h1>Swal Jawab 📝</h1>
+    <!-- <h2>Round number {{currentGame.currentRound}}</h2> -->
     <div v-if="!Object.values(currentGame.currentRound.playersAnwsered)[0].isAnwsered">
       <h1>Question: {{currentGame.currentRound.question}}</h1>
       <input type="text" name="anwser" id="anwser" v-model="anwser" />
@@ -22,7 +23,7 @@
     </div>
 
     <div
-      v-if="currentGame.currentRound.isAllAnwsered && !currentGame.currentRound.isAllLikedAnwsered"
+      v-if="currentGame.currentRound.isAllAnwsered && !(currentGame.currentRound.isAllLikedAnwsered)"
     >
       <ul>
         <li v-for="item in Object.values(currentGame.currentRound.anwsers)" :key="item.uid">
@@ -33,7 +34,7 @@
       </ul>
     </div>
     <div
-      v-if="currentGame.currentRound.isAllAnwsered && currentGame.currentRound.isAllLikedAnwsered"
+      v-if="currentGame.currentRound.isAllAnwsered && (currentGame.currentRound.isAllLikedAnwsered)"
     >
       <h1>Score Card</h1>
       <table>
@@ -43,9 +44,10 @@
         <tr v-for="item in Object.values(currentGame.gameStats.totalScore)" :key="item.uid">
           <td>{{item.displayName}}</td>
           <td>{{item.score}}</td>
-           <td>{{Object.keys(currentGame.currentRound.playersAnwsered[item.uid].likedby).length}}</td>
+          <td>{{Object.keys(currentGame.currentRound.playersAnwsered[item.uid].likedby).length}}</td>
         </tr>
       </table>
+       <button v-if="currentGame.createdBy === user.data.uid" @click="submitLike()">Play Next Round</button>
     </div>
   </div>
 </template>
