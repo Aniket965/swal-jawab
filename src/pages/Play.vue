@@ -31,7 +31,7 @@
           <label for="contactChoice3">{{ item.text }}</label>
         </li>
         <button v-if="currentGame.currentRound.playersAnwsered[user.data.uid].isDoneLiking === false" @click="submitLike()">submit</button>
-        <p>Number of frients Left liking: {{  Object.keys(this.currentGame.currentRound.playersAnwsered).length - Object.keys(this.currentGame.currentRound.likes).length}}</p>
+        <p v-if="this.currentGame.currentRound.likes">Number of frients Left liking: {{  Object.keys(this.currentGame.currentRound.playersAnwsered).length - Object.keys(this.currentGame.currentRound.likes).length }}</p>
       </ul>
     </div>
     <div
