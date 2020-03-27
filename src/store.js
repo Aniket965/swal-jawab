@@ -7,12 +7,22 @@ export const store = new Vuex.Store({
     state: {
         user: {
           loggedIn: false,
-          data: null
+          data: null,
+          gameDetails: {
+            isGameStarted: false,
+            gameId:null
+          }
+        },
+        currentGame: {
+
         }
       },
       getters: {
         user(state){
           return state.user
+        },
+        currentGame(state) {
+          return state.currentGame
         }
       },
       mutations: {
@@ -21,6 +31,12 @@ export const store = new Vuex.Store({
         },
         SET_USER(state, data) {
           state.user.data = data;
+        },
+        SET_USERGAME(state,value) {
+          state.user.gameDetails = value;
+        },
+        SET_GAME(state,data) {
+          state.currentGame = data;
         }
       },
       actions: {
@@ -29,11 +45,21 @@ export const store = new Vuex.Store({
           if (user) {
             commit("SET_USER", {
               displayName: user.displayName,
-              email: user.email
+              email: user.email,
+              uid: user.uid,
             });
           } else {
             commit("SET_USER", null);
           }
+        },
+        fetchCurrentGameDetails({commit},details) {
+          commit("SET_USERGAME", {
+            isGameStarted:details.currentGameId !== null,
+            gameId:details.currentGameId
+          });
+        },
+        fetchGame({commit}, data) {
+          commit("SET_GAME",data)
         }
       }
 })

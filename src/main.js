@@ -7,9 +7,10 @@ import router from "./router/index";
 const firebase = require('./firebaseConfig.js')
 Vue.config.productionTip = false;
 
-firebase.auth.onAuthStateChanged(user => {
+firebase.auth.onAuthStateChanged(async user => {
   store.dispatch("fetchUser", user);
-
+  let details = await (await firebase.usersCollection.doc(user.uid).get()).data();
+  store.dispatch('fetchCurrentGameDetails', details)
     if (user) {
       // User is signed in.
       router.replace('home');

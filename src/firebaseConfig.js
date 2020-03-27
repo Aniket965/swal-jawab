@@ -16,6 +16,7 @@ firebase.initializeApp(firebaseConfig)
 
 // firebase utils
 const db = firebase.firestore()
+const realtimedb = firebase.database();
 const auth = firebase.auth()
 const currentUser = auth.currentUser
 
@@ -23,10 +24,13 @@ const currentUser = auth.currentUser
 
 // firebase collections
 const usersCollection = db.collection('users')
+const gameSessionRef = realtimedb.ref('/gamesession')
 
 export {
     db,
+    realtimedb,
     auth,
     currentUser,
     usersCollection,
+    gameSessionRef
 }
