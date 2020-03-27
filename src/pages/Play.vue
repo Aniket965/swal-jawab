@@ -126,7 +126,6 @@ export default {
           text: this.anwser,
           writtenBy: this.user.data.uid
         });
-        console.log(d);
       await gameSessionRef
         .child(this.currentGame.gameid + "/currentRound/anwsers/"+d.key+"/id")
         .set(d.key);
