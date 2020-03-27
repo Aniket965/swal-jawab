@@ -18,7 +18,7 @@ import firebase from "firebase";
 import { gameSessionRef, usersCollection } from "../firebaseConfig";
 export default {
   name: "Start",
-  beforeMount() {
+  mounted() {
     if (this.currentGame.isStarted) {
       this.$router.replace({
         name: "play"
@@ -27,10 +27,18 @@ export default {
   },
   methods: {
     async startGame() {
-
       await gameSessionRef.child(this.user.gameDetails.gameId).set({
         ...this.currentGame,
+        gameid:this.user.gameDetails.gameId,
         isStarted: true,
+        gameStats:{
+          totalScore:Object.fromEntries(new Map(Object.values(this.currentGame.players).map(ele => {
+              return [
+                ele.uid,
+                { ...ele, score:0 }
+              ];
+            })))
+        },
         currentRound: {
           num: 1,
           question: "what is home name of anirodh",
@@ -45,6 +53,11 @@ export default {
           
         }
       });
+
+      this.$router.replace({
+        name: "play"
+      });
+      
     },
     signOut() {
       firebase

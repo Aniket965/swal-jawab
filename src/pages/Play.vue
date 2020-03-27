@@ -2,8 +2,8 @@
   <div id="play-page">
     <button @click="signOut()">logout</button>
     <h1>Swal Jawab 📝</h1>
-    <!-- <h2>Round number {{currentGame.currentRound}}</h2> -->
-    <div v-if="!Object.values(currentGame.currentRound.playersAnwsered)[0].isAnwsered">
+    <h2>Round #{{currentGame.currentRound.num}}</h2>
+    <div v-if="currentGame.currentRound.playersAnwsered[user.data.uid].isAnwsered == false">
       <h1>Question: {{currentGame.currentRound.question}}</h1>
       <input type="text" name="anwser" id="anwser" v-model="anwser" />
       <button @click="submitAnwser()">Submit</button>
@@ -28,9 +28,10 @@
       <ul>
         <li v-for="item in Object.values(currentGame.currentRound.anwsers)" :key="item.uid">
           <input type="radio" :id="item.writtenBy" v-model="likedId" name="like" :value="item.id" />
-          <label for="contactChoice3">{{ item.text._value }}</label>
+          <label for="contactChoice3">{{ item.text }}</label>
         </li>
-        <button @click="submitLike()">submit</button>
+        <button v-if="currentGame.currentRound.playersAnwsered[user.data.uid].isDoneLiking === false" @click="submitLike()">submit</button>
+        <p>Number of frients Left liking: {{  Object.keys(this.currentGame.currentRound.playersAnwsered).length - Object.keys(this.currentGame.currentRound.likes).length}}</p>
       </ul>
     </div>
     <div
@@ -40,14 +41,14 @@
       <table>
         <th>Name</th>
         <th>Score</th>
-         <th>This round</th>
+        <th>This round</th>
         <tr v-for="item in Object.values(currentGame.gameStats.totalScore)" :key="item.uid">
           <td>{{item.displayName}}</td>
           <td>{{item.score}}</td>
           <td>{{Object.keys(currentGame.currentRound.playersAnwsered[item.uid].likedby).length}}</td>
         </tr>
       </table>
-       <button v-if="currentGame.createdBy === user.data.uid" @click="submitLike()">Play Next Round</button>
+      <button v-if="currentGame.createdBy === user.data.uid" @click="submitLike()">Play Next Round</button>
     </div>
   </div>
 </template>
@@ -68,38 +69,76 @@ export default {
     async submitLike() {
       await gameSessionRef
         .child(
-          "-M3RkqkXc0_AjNSTwIgE/currentRound/playersAnwsered/" +
+          this.currentGame.gameid +
+            "/currentRound/playersAnwsered/" +
             this.user.data.uid +
             "/isDoneLiking"
         )
         .set(true);
-      let likedUid = (await gameSessionRef.child("-M3RkqkXc0_AjNSTwIgE/currentRound/anwsers/" +
-            this.likedId +'/writtenBy').once('value')).val();
+      let likedUid = (
+        await gameSessionRef
+          .child(
+            this.currentGame.gameid +
+              "/currentRound/anwsers/" +
+              this.likedId +
+              "/writtenBy"
+          )
+          .once("value")
+      ).val();
+           let d = await gameSessionRef
+        .child(this.currentGame.gameid + "/currentRound/likes")
+        .push({
+          uid: this.user.data.uid
+        });
       await gameSessionRef
         .child(
-          "-M3RkqkXc0_AjNSTwIgE/currentRound/playersAnwsered/" +
-           likedUid +
+          this.currentGame.gameid +
+            "/currentRound/playersAnwsered/" +
+            likedUid +
             "/likedby"
         )
         .push({
           uid: this.user.data.uid,
           displayName: this.user.data.displayName
         });
+
+             if (
+        Object.keys(this.currentGame.currentRound.likes).length ===
+        Object.keys(this.currentGame.currentRound.playersAnwsered).length
+      ) {
+        await gameSessionRef
+          .child(this.currentGame.gameid + "/currentRound/isAllLikedAnwsered/")
+          .set(true);
+      }
     },
     async submitAnwser() {
       await gameSessionRef
         .child(
-          "-M3RkqkXc0_AjNSTwIgE/currentRound/playersAnwsered/" +
+          this.currentGame.gameid +
+            "/currentRound/playersAnwsered/" +
             this.user.data.uid +
             "/isAnwsered"
         )
         .set(true);
-      await gameSessionRef
-        .child("-M3RkqkXc0_AjNSTwIgE/currentRound/anwsers")
+      let d = await gameSessionRef
+        .child(this.currentGame.gameid + "/currentRound/anwsers")
         .push({
-          text: anwser,
+          text: this.anwser,
           writtenBy: this.user.data.uid
         });
+        console.log(d);
+      await gameSessionRef
+        .child(this.currentGame.gameid + "/currentRound/anwsers/"+d.key+"/id")
+        .set(d.key);
+
+      if (
+        Object.keys(this.currentGame.currentRound.anwsers).length ===
+        Object.keys(this.currentGame.currentRound.playersAnwsered).length
+      ) {
+        await gameSessionRef
+          .child(this.currentGame.gameid + "/currentRound/isAllAnwsered/")
+          .set(true);
+      }
     },
     signOut() {
       firebase

@@ -16,6 +16,20 @@ import firebase from "firebase";
 import { gameSessionRef, usersCollection } from "../firebaseConfig";
 export default {
   name: "Join",
+    beforeMount() {
+    if (this.currentGame.isStarted) {
+      this.$router.replace({
+        name: "play"
+      });
+    }
+  },
+  updated() {
+     if (this.currentGame.isStarted) {
+      this.$router.replace({
+        name: "play"
+      });
+    }
+  },
   methods: {
     signOut() {
       firebase
