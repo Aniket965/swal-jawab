@@ -5,7 +5,7 @@ const questions = [
     "where do you find $$ in another 10 years", 
     "Who is there in $$ ’s emergency contact", 
     "What is the first thing as a baby $$ had?",
-    " What is $$'s guilty pleasure?",
+    "What is $$'s guilty pleasure?",
     "Who is the last person that $$ stalked on social media?",
     "Why did $$'s last relationship end?",
     "What habit can’t $$ seem to quit?",
