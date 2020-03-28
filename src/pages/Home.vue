@@ -71,7 +71,17 @@ export default {
           name: "join"
         });
       } else {
-        alert("Can not join game already started");
+        if (
+          Object.values(this.currentGame.players)
+            .map(ele => ele.uid)
+            .includes(this.user.data.uid) === true
+        ) {
+          this.$router.push({
+            name: "join"
+          });
+        } else {
+          alert("Can not join game already started");
+        }
       }
     },
     async continueGame() {

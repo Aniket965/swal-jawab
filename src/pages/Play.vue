@@ -31,7 +31,7 @@
       >
         <ul>
           <li v-for="item in Object.values(currentGame.currentRound.anwsers)" :key="item.uid">
-            <input type="radio" :id="item.writtenBy" v-model="likedId" name="like" :value="item.id" />
+            <input v-if="item.writtenBy !== user.data.uid"  type="radio" :id="item.writtenBy" v-model="likedId" name="like" :value="item.id"  />
             <label for="contactChoice3">{{ item.text }}</label>
           </li>
           <button
@@ -179,7 +179,8 @@ export default {
       }
     },
     async submitLike() {
-      await gameSessionRef
+      if (this.likedId !== '')
+   {   await gameSessionRef
         .child(
           this.currentGame.gameid +
             "/currentRound/playersAnwsered/" +
@@ -221,6 +222,8 @@ export default {
         await gameSessionRef
           .child(this.currentGame.gameid + "/currentRound/isAllLikedAnwsered/")
           .set(true);
+      }} else {
+        alert('select an option');
       }
     },
     async submitAnwser() {
