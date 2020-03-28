@@ -30,8 +30,13 @@
           <input type="radio" :id="item.writtenBy" v-model="likedId" name="like" :value="item.id" />
           <label for="contactChoice3">{{ item.text }}</label>
         </li>
-        <button v-if="currentGame.currentRound.playersAnwsered[user.data.uid].isDoneLiking === false" @click="submitLike()">submit</button>
-        <p v-if="this.currentGame.currentRound.likes">Number of frients Left liking: {{  Object.keys(this.currentGame.currentRound.playersAnwsered).length - Object.keys(this.currentGame.currentRound.likes).length }}</p>
+        <button
+          v-if="currentGame.currentRound.playersAnwsered[user.data.uid].isDoneLiking === false"
+          @click="submitLike()"
+        >submit</button>
+        <p
+          v-if="this.currentGame.currentRound.likes"
+        >Number of frients Left liking: {{ Object.keys(this.currentGame.currentRound.playersAnwsered).length - Object.keys(this.currentGame.currentRound.likes).length }}</p>
       </ul>
     </div>
     <div
@@ -48,7 +53,10 @@
           <td>{{(currentGame.currentRound.playersAnwsered[item.uid].likedby ? Object.keys(currentGame.currentRound.playersAnwsered[item.uid].likedby).length : 0)}}</td>
         </tr>
       </table>
-      <button v-if="currentGame.createdBy === user.data.uid" @click="submitLike()">Play Next Round</button>
+      <button
+        v-if="currentGame.createdBy === user.data.uid"
+        @click="playNextRound()"
+      >Play Next Round</button>
     </div>
   </div>
 </template>
@@ -66,6 +74,31 @@ export default {
     };
   },
   methods: {
+    async playNextRound() {
+      let totalScore = this.currentGame.gameStats.totalScore;
+      const newScore = Object.fromEntries(
+        new Map(
+          Object.keys(totalScore).map(ele => {
+            return [
+              ele,
+              {
+                ...totalScore[ele],
+                score: this.currentGame.currentRound.playersAnwsered[
+                  totalScore[ele].uid
+                ].likedby
+                  ? Object.keys(
+                      this.currentGame.currentRound.playersAnwsered[
+                        totalScore[ele].uid
+                      ].likedby
+                    ).length
+                  : 0
+              }
+            ];
+          })
+        )
+      );
+      await gameSessionRef.child(   this.currentGame.gameid + "/gameStats/totalScore").set(newScore);
+    },
     async submitLike() {
       await gameSessionRef
         .child(
@@ -85,7 +118,7 @@ export default {
           )
           .once("value")
       ).val();
-           let d = await gameSessionRef
+      let d = await gameSessionRef
         .child(this.currentGame.gameid + "/currentRound/likes")
         .push({
           uid: this.user.data.uid
@@ -102,7 +135,7 @@ export default {
           displayName: this.user.data.displayName
         });
 
-             if (
+      if (
         Object.keys(this.currentGame.currentRound.likes).length ===
         Object.keys(this.currentGame.currentRound.playersAnwsered).length
       ) {
@@ -127,7 +160,9 @@ export default {
           writtenBy: this.user.data.uid
         });
       await gameSessionRef
-        .child(this.currentGame.gameid + "/currentRound/anwsers/"+d.key+"/id")
+        .child(
+          this.currentGame.gameid + "/currentRound/anwsers/" + d.key + "/id"
+        )
         .set(d.key);
 
       if (

@@ -13,7 +13,7 @@ firebase.auth.onAuthStateChanged(async user => {
       // User is signed in.
       let details = await (await firebase.usersCollection.doc(user.uid).get()).data();
       store.dispatch('fetchCurrentGameDetails', details)
-      router.replace('home');
+      router.replace('');
     } else {
       // No user is signed in.
       router.replace('login');
