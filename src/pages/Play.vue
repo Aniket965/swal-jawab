@@ -102,6 +102,8 @@ export default {
     },
     async playNextRound() {
       let totalScore = this.currentGame.gameStats.totalScore;
+      this.likedId = '';
+      this.anwser = '';
       const newScore = Object.fromEntries(
         new Map(
           Object.keys(totalScore).map(ele => {
