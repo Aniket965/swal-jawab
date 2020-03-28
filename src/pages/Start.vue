@@ -20,7 +20,7 @@ export default {
   name: "Start",
   mounted() {
     if (this.currentGame.isStarted) {
-      this.$router.replace({
+      this.$router.push({
         name: "play"
       });
     }
@@ -54,7 +54,7 @@ export default {
         }
       });
 
-      this.$router.replace({
+      this.$router.push({
         name: "play"
       });
       
@@ -64,7 +64,7 @@ export default {
         .auth()
         .signOut()
         .then(() => {
-          this.$router.replace({
+          this.$router.push({
             name: "login"
           });
         });

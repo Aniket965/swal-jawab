@@ -15,7 +15,9 @@ export default {
     googleLogin() {
       const provider = new firebase.auth.GoogleAuthProvider();
       firebase.auth().signInWithPopup(provider).then(result => {
-          this.$router.replace('');
+          this.$router.push({
+            name:'home',
+          });
       }).catch(err => {
         alert('Opps.  ' + err.message)
       })

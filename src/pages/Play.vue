@@ -214,7 +214,7 @@ export default {
         .auth()
         .signOut()
         .then(() => {
-          this.$router.replace({
+          this.$router.push({
             name: "login"
           });
         });

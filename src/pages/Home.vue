@@ -36,7 +36,7 @@ export default {
         displayName:this.user.data.displayName,
         uid:this.user.data.uid
       })
-        this.$router.replace({
+        this.$router.push({
             name: "join"
       });
 
@@ -45,7 +45,7 @@ export default {
       const gameId = this.user.gameDetails.gameId;
       let gameData = await (await gameSessionRef.child(gameId).once('value')).val();
       this.fetchGame({gameData,gameId});
-      this.$router.replace({
+      this.$router.push({
             name: "start"
       });
     },
@@ -77,7 +77,7 @@ export default {
         });
       let gameData = await (await res.once('value')).val();
       this.fetchGame({gameData,gameId:res.key});
-      this.$router.replace({
+      this.$router.push({
             name: "start"
       });
     },
@@ -86,7 +86,7 @@ export default {
         .auth()
         .signOut()
         .then(() => {
-          this.$router.replace({
+          this.$router.push({
             name: "login"
           });
         });
