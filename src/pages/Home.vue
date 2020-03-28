@@ -1,13 +1,63 @@
 <template>
-  <div id="home-page">
-    <button @click="signOut()">logout</button>
-    <h1>Swal Jawab 📝</h1>
-    <h2>🙏🏻 Welcome, {{user.data ? user.data.displayName : ''}}</h2>
-    <input type="text" v-model="code" name="code" id="code" />
-    <button @click="join()">join game</button>
-    <button
-      @click="user.gameDetails.isGameStarted ? continueGame() : createGameSession()"
-    >{{user.gameDetails.isGameStarted ? 'continue' : 'create'}} game</button>
+  <div class="home-page">
+    <!-- <div style="position:relative;">
+      <div class="box-1"></div>
+      <div class="box-2"></div>
+    </div> -->
+    <h1 class="logo mt-5">Swal Jawab 📝</h1>
+    <div class="header">
+      <h4>🙏🏻Welcome Back,</h4>
+      <div class="name-heading">{{user.data ? user.data.displayName : ''}}</div>
+    </div>
+    <div class="center-child mt-5">
+      <div class="button-grid">
+        <v-text-field
+          style="border-radius:18px;"
+          color="var(--primaryColor)"
+          v-model="code"
+          name="code"
+          id="code"
+          class="code"
+          label="Enter Code"
+          placeholder="Eg ABC 21"
+          filled
+          rounded
+          @keydown.enter="join()"
+        ></v-text-field>
+        <v-btn
+          x-large
+          style="border-radius:18px;"
+          block
+          class="custom"
+          rounded
+          color="var(--primaryColor)"
+          @click="join()"
+          dark
+        >Join</v-btn>
+        <v-btn
+          style="border-radius:18px;"
+          x-large
+          outlined
+          block
+          class="mt-1 custom"
+          rounded
+          color="var(--primaryColor)"
+          dark
+          @click="user.gameDetails.isGameStarted ? continueGame() : createGameSession()"
+        >{{user.gameDetails.isGameStarted ? 'continue' : 'New'}} Game</v-btn>
+        <v-btn
+          style="border-radius:18px;"
+          x-large
+          outlined
+          block
+          class="mt-1 custom"
+          rounded
+          color="var(--primaryColor)"
+          dark
+          @click="signOut()"
+        >Logout</v-btn>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -149,6 +199,73 @@ export default {
   }
 };
 </script>
-
-<style lang="scss">
+<style  lang="scss">
+.custom .v-btn__content {
+  font-family: "Poppins", sans-serif !important;
+  font-weight: 700 !important;
+  text-transform: none !important;
+  font-size: 1.5rem !important;
+}
+.code .v-text-field__slot input {
+  font-family: "Poppins", sans-serif !important;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--primaryColor) !important;
+}
+#home-page {
+  // overflow: hidden!important;
+  // background: pink!important;
+  width: 100vw;
+  height: 100vh;
+}
 </style>
+<style scoped lang="scss">
+.box-1 ,.box-2{
+  height: 3rem;
+  width: 1000px;
+  left: 3rem;
+  top: 5rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -100;
+}
+.box-1 {
+    background: var(--primaryColor);
+    transform: rotate(15deg);
+    z-index: 0;
+}
+.box-2 {
+    background: var(--secondaryColor);
+    transform: rotate(45deg);
+    top: 10rem;
+      left: 1rem;
+    z-index: 0;
+}
+.button-grid {
+  width: 300px;
+  max-width: 500px;
+}
+.header {
+  margin-top: 4rem;
+  z-index: 2;
+}
+.logo {
+  font-size: 2.3rem;
+  font-weight: 900;
+  color: var(--darkColor);
+}
+h4 {
+  margin: 0;
+  z-index: 2;
+}
+.name-heading {
+  font-size: 2.3rem;
+  z-index: 2;
+  font-weight: 700;
+  color: var(--primaryColor);
+  margin: 0;
+}
+
+</style>
+

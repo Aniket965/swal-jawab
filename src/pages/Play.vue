@@ -2,12 +2,44 @@
   <div id="play-page">
     <button @click="signOut()">logout</button>
     <h1>Swal Jawab 📝</h1>
-    <div v-if="currentGame !== null && currentGame !== undefined">
-      <h2>Round #{{currentGame.currentRound.num}} / {{currentGame.gamelength}}</h2>
+    <div class="mt-3" v-if="currentGame !== null && currentGame !== undefined">
+      <h2>
+        Round
+        <span style="color:var(--primaryColor)">#{{currentGame.currentRound.num}}</span>
+        / {{currentGame.gamelength}}
+      </h2>
       <div v-if="currentGame.currentRound.playersAnwsered[user.data.uid].isAnwsered == false">
-        <h1>Question: {{currentGame.currentRound.question}}</h1>
-        <input type="text" name="anwser" id="anwser" v-model="anwser" />
-        <button @click="submitAnwser()">Submit</button>
+        <h1>
+          <span style="color:var(--primaryColor)">Question:</span>
+          {{currentGame.currentRound.question}}
+        </h1>
+        <div class="center-child">
+          <div style="max-width:700px;padding:1rem;">
+            <v-textarea
+              filled
+              required
+              multiline
+              dense
+              rounded
+              label="Your Anwser"
+              type="text"
+              name="anwser"
+              id="anwser"
+              @keydown.enter="submitAnwser()"
+              v-model="anwser"
+            />
+          </div>
+        </div>
+
+        <v-btn
+          style="border-radius:10px;"
+          outlined
+          class="mt-1"
+          rounded
+          color="var(--primaryColor)"
+          dark
+          @click="submitAnwser()"
+        >Submit</v-btn>
       </div>
 
       <div
@@ -31,13 +63,27 @@
       >
         <ul>
           <li v-for="item in Object.values(currentGame.currentRound.anwsers)" :key="item.uid">
-            <input v-if="item.writtenBy !== user.data.uid"  type="radio" :id="item.writtenBy" v-model="likedId" name="like" :value="item.id"  />
+            <input
+              v-if="item.writtenBy !== user.data.uid"
+              type="radio"
+              :id="item.writtenBy"
+              v-model="likedId"
+              name="like"
+              :value="item.id"
+            />
             <label for="contactChoice3">{{ item.text }}</label>
           </li>
-          <button
+
+          <v-btn
+            style="border-radius:10px;"
+            outlined
+            class="mt-1"
+            rounded
+            color="var(--primaryColor)"
+            dark
             v-if="currentGame.currentRound.playersAnwsered[user.data.uid].isDoneLiking === false"
             @click="submitLike()"
-          >submit</button>
+          >submit</v-btn>
           <p
             v-if="this.currentGame.currentRound.likes"
           >Number of friends Left liking: {{ Object.keys(this.currentGame.currentRound.playersAnwsered).length - Object.keys(this.currentGame.currentRound.likes).length }}</p>
@@ -57,14 +103,27 @@
             <td>+{{(currentGame.currentRound.playersAnwsered[item.uid].likedby ? Object.keys(currentGame.currentRound.playersAnwsered[item.uid].likedby).length : 0)}}</td>
           </tr>
         </table>
-        <button
+
+        <v-btn
+          style="border-radius:10px;"
+          outlined
+          class="mt-1"
+          rounded
+          color="var(--primaryColor)"
+          dark
           v-if="currentGame.createdBy === user.data.uid"
           @click="playNextRound()"
-        >Play Next Round</button>
-        <button
+        >Play Next Round</v-btn>
+        <v-btn
+          style="border-radius:10px;"
+          outlined
+          class="mt-1"
+          rounded
+          color="var(--primaryColor)"
+          dark
           v-if="currentGame.createdBy !== user.data.uid && currentGame.isFinished"
           @click="goToHome()"
-        >Go to Home</button>
+        >Go to Home</v-btn>
       </div>
     </div>
   </div>
@@ -102,8 +161,8 @@ export default {
     },
     async playNextRound() {
       let totalScore = this.currentGame.gameStats.totalScore;
-      this.likedId = '';
-      this.anwser = '';
+      this.likedId = "";
+      this.anwser = "";
       const newScore = Object.fromEntries(
         new Map(
           Object.keys(totalScore).map(ele => {
@@ -181,51 +240,54 @@ export default {
       }
     },
     async submitLike() {
-      if (this.likedId !== '')
-   {   await gameSessionRef
-        .child(
-          this.currentGame.gameid +
-            "/currentRound/playersAnwsered/" +
-            this.user.data.uid +
-            "/isDoneLiking"
-        )
-        .set(true);
-      let likedUid = (
+      if (this.likedId !== "") {
         await gameSessionRef
           .child(
             this.currentGame.gameid +
-              "/currentRound/anwsers/" +
-              this.likedId +
-              "/writtenBy"
+              "/currentRound/playersAnwsered/" +
+              this.user.data.uid +
+              "/isDoneLiking"
           )
-          .once("value")
-      ).val();
-      let d = await gameSessionRef
-        .child(this.currentGame.gameid + "/currentRound/likes")
-        .push({
-          uid: this.user.data.uid
-        });
-      await gameSessionRef
-        .child(
-          this.currentGame.gameid +
-            "/currentRound/playersAnwsered/" +
-            likedUid +
-            "/likedby"
-        )
-        .push({
-          uid: this.user.data.uid,
-          displayName: this.user.data.displayName
-        });
-
-      if (
-        Object.keys(this.currentGame.currentRound.likes).length ===
-        Object.keys(this.currentGame.currentRound.playersAnwsered).length
-      ) {
-        await gameSessionRef
-          .child(this.currentGame.gameid + "/currentRound/isAllLikedAnwsered/")
           .set(true);
-      }} else {
-        alert('select an option');
+        let likedUid = (
+          await gameSessionRef
+            .child(
+              this.currentGame.gameid +
+                "/currentRound/anwsers/" +
+                this.likedId +
+                "/writtenBy"
+            )
+            .once("value")
+        ).val();
+        let d = await gameSessionRef
+          .child(this.currentGame.gameid + "/currentRound/likes")
+          .push({
+            uid: this.user.data.uid
+          });
+        await gameSessionRef
+          .child(
+            this.currentGame.gameid +
+              "/currentRound/playersAnwsered/" +
+              likedUid +
+              "/likedby"
+          )
+          .push({
+            uid: this.user.data.uid,
+            displayName: this.user.data.displayName
+          });
+
+        if (
+          Object.keys(this.currentGame.currentRound.likes).length ===
+          Object.keys(this.currentGame.currentRound.playersAnwsered).length
+        ) {
+          await gameSessionRef
+            .child(
+              this.currentGame.gameid + "/currentRound/isAllLikedAnwsered/"
+            )
+            .set(true);
+        }
+      } else {
+        alert("select an option");
       }
     },
     async submitAnwser() {

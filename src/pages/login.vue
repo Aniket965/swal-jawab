@@ -2,7 +2,16 @@
   <div id="login-page">
     <h1>Swal Jawab 📝</h1>
     <h2>Login</h2>
-    <button @click="googleLogin()">Continue with Google</button>
+       <v-btn
+          style="border-radius:18px;"
+          x-large
+          outlined
+          class="mt-1 custom"
+          rounded
+          color="var(--primaryColor)"
+          dark
+          @click="googleLogin()"
+        >Continue with Google</v-btn>
   </div>
 </template>
 
