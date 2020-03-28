@@ -36,7 +36,7 @@
         >submit</button>
         <p
           v-if="this.currentGame.currentRound.likes"
-        >Number of frients Left liking: {{ Object.keys(this.currentGame.currentRound.playersAnwsered).length - Object.keys(this.currentGame.currentRound.likes).length }}</p>
+        >Number of friends Left liking: {{ Object.keys(this.currentGame.currentRound.playersAnwsered).length - Object.keys(this.currentGame.currentRound.likes).length }}</p>
       </ul>
     </div>
     <div
@@ -83,7 +83,7 @@ export default {
               ele,
               {
                 ...totalScore[ele],
-                score: this.currentGame.currentRound.playersAnwsered[
+                score: totalScore[ele].score + (this.currentGame.currentRound.playersAnwsered[
                   totalScore[ele].uid
                 ].likedby
                   ? Object.keys(
@@ -91,7 +91,7 @@ export default {
                         totalScore[ele].uid
                       ].likedby
                     ).length
-                  : 0
+                  : 0)
               }
             ];
           })
@@ -122,6 +122,16 @@ export default {
           )
         };
         await gameSessionRef.child(this.currentGame.gameid + "/currentRound").set(newRound);
+      } else {
+        alert('game ended');
+        // await usersCollection.doc(this.user.data.uid).set({
+        //     currentGameId: null,
+        // });
+
+        this.$router.push({
+          name: "home"
+        });
+      
       }
     },
     async submitLike() {
