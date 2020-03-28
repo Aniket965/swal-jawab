@@ -45,12 +45,12 @@
       <h1>Score Card</h1>
       <table>
         <th>Name</th>
-        <th>Score</th>
+        <th>Total Score</th>
         <th>This round</th>
         <tr v-for="item in Object.values(currentGame.gameStats.totalScore)" :key="item.uid">
           <td>{{item.displayName}}</td>
           <td>{{item.score}}</td>
-          <td>{{(currentGame.currentRound.playersAnwsered[item.uid].likedby ? Object.keys(currentGame.currentRound.playersAnwsered[item.uid].likedby).length : 0)}}</td>
+          <td>+{{(currentGame.currentRound.playersAnwsered[item.uid].likedby ? Object.keys(currentGame.currentRound.playersAnwsered[item.uid].likedby).length : 0)}}</td>
         </tr>
       </table>
       <button
@@ -97,7 +97,32 @@ export default {
           })
         )
       );
-      await gameSessionRef.child(   this.currentGame.gameid + "/gameStats/totalScore").set(newScore);
+
+      await gameSessionRef
+        .child(this.currentGame.gameid + "/gameStats/totalScore")
+        .set(newScore);
+
+      // TODO: end game if its last round
+      // FIXME: add new round duplicate from start.vue make it one place only
+      if (this.currentGame.currentRound.num != this.currentGame.gamelength) {
+        let newRound = {
+          num: this.currentGame.currentRound.num + 1,
+          question: `what is home name of anirodh ${this.currentGame.currentRound.num}`,
+          isAllAnwsered: false,
+          isAllLikedAnwsered: false,
+          playersAnwsered: Object.fromEntries(
+            new Map(
+              Object.values(this.currentGame.players).map(ele => {
+                return [
+                  ele.uid,
+                  { ...ele, isAnwsered: false, isDoneLiking: false }
+                ];
+              })
+            )
+          )
+        };
+        await gameSessionRef.child(this.currentGame.gameid + "/currentRound").set(newRound);
+      }
     },
     async submitLike() {
       await gameSessionRef
