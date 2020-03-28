@@ -1,4 +1,5 @@
-const questions = [
+import uniqueRandomArray from "unique-random-array"
+const questions = uniqueRandomArray([
     "What is $$ Spirit Animal?", 
     "what do you think about $$", 
     "who would be the person $$ die for",
@@ -13,13 +14,10 @@ const questions = [
     "What would $$ do with a million dollars?",
     "What is the most romantic thing that $$ has ever done?",
     "What is $$'s worst childhood memory?"
-]
+])
 
-function randomitem(myArray) {
-    return myArray[Math.floor(Math.random()*myArray.length)];
-}
 export const questionGenerator = (names) => {
-    const name = randomitem(names);
-    const question = randomitem(questions);
-    return question.replace('$$',name);
+    const name = uniqueRandomArray(names);
+    const question = questions();
+    return question.replace('$$',name());
 }

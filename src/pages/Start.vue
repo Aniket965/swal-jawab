@@ -20,16 +20,19 @@ import {questionGenerator} from '../questionGenerator';
 export default {
   name: "Start",
   mounted() {
-    if (this.currentGame.isStarted) {
+    if (this.currentGame.isStarted === true) {
       this.$router.push({
         name: "play"
       });
     }
   },
   methods: {
+    ...mapActions({
+      fetchGame: "fetchGame",
+      setGameListner: "setGameListner"
+    }),
     async startGame() {
-     
-      await gameSessionRef.child(this.user.gameDetails.gameId).set({
+      await gameSessionRef.child(`/${this.user.gameDetails.gameId}`).set({
         ...this.currentGame,
         gameid:this.user.gameDetails.gameId,
         isStarted: true,

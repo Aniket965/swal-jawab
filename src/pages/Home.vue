@@ -80,7 +80,6 @@ export default {
         await gameSessionRef.child(gameId).once("value")
       ).val();
       this.fetchGame({ gameData, gameId });
-      this.setGameListner(gameId);
       this.$router.push({
         name: "start"
       });

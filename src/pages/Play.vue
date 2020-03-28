@@ -2,65 +2,70 @@
   <div id="play-page">
     <button @click="signOut()">logout</button>
     <h1>Swal Jawab 📝</h1>
-    <h2>Round #{{currentGame.currentRound.num}} / {{currentGame.gamelength}}</h2>
-    <div v-if="currentGame.currentRound.playersAnwsered[user.data.uid].isAnwsered == false">
-      <h1>Question: {{currentGame.currentRound.question}}</h1>
-      <input type="text" name="anwser" id="anwser" v-model="anwser" />
-      <button @click="submitAnwser()">Submit</button>
-    </div>
+    <div v-if="currentGame !== null && currentGame !== undefined">
+      <h2>Round #{{currentGame.currentRound.num}} / {{currentGame.gamelength}}</h2>
+      <div v-if="currentGame.currentRound.playersAnwsered[user.data.uid].isAnwsered == false">
+        <h1>Question: {{currentGame.currentRound.question}}</h1>
+        <input type="text" name="anwser" id="anwser" v-model="anwser" />
+        <button @click="submitAnwser()">Submit</button>
+      </div>
 
-    <div
-      v-if="currentGame.currentRound.playersAnwsered[user.data.uid].isAnwsered && !currentGame.currentRound.isAllAnwsered"
-    >
-      <h1>Waiting for everyone to anwser</h1>
-      <ol>
-        <li v-for="item in Object.values(currentGame.currentRound.playersAnwsered)" :key="item.uid">
-          <span v-if="item.isAnwsered">✅</span>
-          <span v-if="!item.isAnwsered">🕐</span>
-          {{ item.displayName }}
-        </li>
-      </ol>
-    </div>
+      <div
+        v-if="currentGame.currentRound.playersAnwsered[user.data.uid].isAnwsered && !currentGame.currentRound.isAllAnwsered"
+      >
+        <h1>Waiting for everyone to anwser</h1>
+        <ol>
+          <li
+            v-for="item in Object.values(currentGame.currentRound.playersAnwsered)"
+            :key="item.uid"
+          >
+            <span v-if="item.isAnwsered">✅</span>
+            <span v-if="!item.isAnwsered">🕐</span>
+            {{ item.displayName }}
+          </li>
+        </ol>
+      </div>
 
-    <div
-      v-if="currentGame.currentRound.isAllAnwsered && !(currentGame.currentRound.isAllLikedAnwsered)"
-    >
-      <ul>
-        <li v-for="item in Object.values(currentGame.currentRound.anwsers)" :key="item.uid">
-          <input type="radio" :id="item.writtenBy" v-model="likedId" name="like" :value="item.id" />
-          <label for="contactChoice3">{{ item.text }}</label>
-        </li>
+      <div
+        v-if="currentGame.currentRound.isAllAnwsered && !(currentGame.currentRound.isAllLikedAnwsered)"
+      >
+        <ul>
+          <li v-for="item in Object.values(currentGame.currentRound.anwsers)" :key="item.uid">
+            <input type="radio" :id="item.writtenBy" v-model="likedId" name="like" :value="item.id" />
+            <label for="contactChoice3">{{ item.text }}</label>
+          </li>
+          <button
+            v-if="currentGame.currentRound.playersAnwsered[user.data.uid].isDoneLiking === false"
+            @click="submitLike()"
+          >submit</button>
+          <p
+            v-if="this.currentGame.currentRound.likes"
+          >Number of friends Left liking: {{ Object.keys(this.currentGame.currentRound.playersAnwsered).length - Object.keys(this.currentGame.currentRound.likes).length }}</p>
+        </ul>
+      </div>
+      <div
+        v-if="currentGame.currentRound.isAllAnwsered && (currentGame.currentRound.isAllLikedAnwsered)"
+      >
+        <h1>Score Card</h1>
+        <table>
+          <th>Name</th>
+          <th>Total Score</th>
+          <th>This round</th>
+          <tr v-for="item in Object.values(currentGame.gameStats.totalScore)" :key="item.uid">
+            <td>{{item.displayName}}</td>
+            <td>{{item.score}}</td>
+            <td>+{{(currentGame.currentRound.playersAnwsered[item.uid].likedby ? Object.keys(currentGame.currentRound.playersAnwsered[item.uid].likedby).length : 0)}}</td>
+          </tr>
+        </table>
         <button
-          v-if="currentGame.currentRound.playersAnwsered[user.data.uid].isDoneLiking === false"
-          @click="submitLike()"
-        >submit</button>
-        <p
-          v-if="this.currentGame.currentRound.likes"
-        >Number of friends Left liking: {{ Object.keys(this.currentGame.currentRound.playersAnwsered).length - Object.keys(this.currentGame.currentRound.likes).length }}</p>
-      </ul>
-    </div>
-    <div
-      v-if="currentGame.currentRound.isAllAnwsered && (currentGame.currentRound.isAllLikedAnwsered)"
-    >
-      <h1>Score Card</h1>
-      <table>
-        <th>Name</th>
-        <th>Total Score</th>
-        <th>This round</th>
-        <tr v-for="item in Object.values(currentGame.gameStats.totalScore)" :key="item.uid">
-          <td>{{item.displayName}}</td>
-          <td>{{item.score}}</td>
-          <td>+{{(currentGame.currentRound.playersAnwsered[item.uid].likedby ? Object.keys(currentGame.currentRound.playersAnwsered[item.uid].likedby).length : 0)}}</td>
-        </tr>
-      </table>
-      <button
-        v-if="currentGame.createdBy === user.data.uid"
-        @click="playNextRound()"
-      >Play Next Round</button>
-      <button
-        v-if="currentGame.createdBy !== user.data.uid && currentGame.isFinished"
-        @click="goToHome()"
-      >Go to Home</button>
+          v-if="currentGame.createdBy === user.data.uid"
+          @click="playNextRound()"
+        >Play Next Round</button>
+        <button
+          v-if="currentGame.createdBy !== user.data.uid && currentGame.isFinished"
+          @click="goToHome()"
+        >Go to Home</button>
+      </div>
     </div>
   </div>
 </template>
@@ -69,7 +74,7 @@
 import { mapGetters, mapActions } from "vuex";
 import firebase from "firebase";
 import { gameSessionRef, usersCollection } from "../firebaseConfig";
-import {questionGenerator} from '../questionGenerator';
+import { questionGenerator } from "../questionGenerator";
 export default {
   name: "Play",
   data: function() {
@@ -80,21 +85,21 @@ export default {
   },
   methods: {
     ...mapActions({
-      fetchGame:'fetchGame',
-      resetGameListner:'resetGameListner',
-      fetchCurrentGameDetails:'fetchCurrentGameDetails',
+      fetchGame: "fetchGame",
+      resetGameListner: "resetGameListner",
+      fetchCurrentGameDetails: "fetchCurrentGameDetails"
     }),
     goToHome() {
-          this.fetchCurrentGameDetails({
-          gameId: null,
-          isGameStarted: false,
-        });
-        this.resetGameListner(this.currentGame.gameid);
-        this.fetchGame(null);
-        this.$router.push({
-          name: "home"
-        });
-    }, 
+      this.fetchCurrentGameDetails({
+        gameId: null,
+        isGameStarted: false
+      });
+      this.resetGameListner(this.currentGame.gameid);
+      this.fetchGame(null);
+      this.$router.push({
+        name: "home"
+      });
+    },
     async playNextRound() {
       let totalScore = this.currentGame.gameStats.totalScore;
       const newScore = Object.fromEntries(
@@ -104,15 +109,17 @@ export default {
               ele,
               {
                 ...totalScore[ele],
-                score: totalScore[ele].score + (this.currentGame.currentRound.playersAnwsered[
-                  totalScore[ele].uid
-                ].likedby
-                  ? Object.keys(
-                      this.currentGame.currentRound.playersAnwsered[
-                        totalScore[ele].uid
-                      ].likedby
-                    ).length
-                  : 0)
+                score:
+                  totalScore[ele].score +
+                  (this.currentGame.currentRound.playersAnwsered[
+                    totalScore[ele].uid
+                  ].likedby
+                    ? Object.keys(
+                        this.currentGame.currentRound.playersAnwsered[
+                          totalScore[ele].uid
+                        ].likedby
+                      ).length
+                    : 0)
               }
             ];
           })
@@ -127,7 +134,9 @@ export default {
         // FIXME: add new round duplicate from start.vue make it one place only
         let newRound = {
           num: this.currentGame.currentRound.num + 1,
-          question: questionGenerator(Object.values(this.currentGame.players).map(ele=> ele.displayName)),
+          question: questionGenerator(
+            Object.values(this.currentGame.players).map(ele => ele.displayName)
+          ),
           isAllAnwsered: false,
           isAllLikedAnwsered: false,
           playersAnwsered: Object.fromEntries(
@@ -141,29 +150,32 @@ export default {
             )
           )
         };
-        await gameSessionRef.child(this.currentGame.gameid + "/currentRound").set(newRound);
+        await gameSessionRef
+          .child(this.currentGame.gameid + "/currentRound")
+          .set(newRound);
       } else {
-        alert('game ended');
+        alert("game ended");
         // reset user current game
         await usersCollection.doc(this.user.data.uid).set({
-            currentGameId: null,
+          currentGameId: null
         });
         // update game state
-        await gameSessionRef.child(this.currentGame.gameid + "/isFinished").set(true);
-        
+        await gameSessionRef
+          .child(this.currentGame.gameid + "/isFinished")
+          .set(true);
+
         // reset local store
-         this.fetchCurrentGameDetails({
+        this.fetchCurrentGameDetails({
           gameId: null,
-          isGameStarted: false,
+          isGameStarted: false
         });
         this.resetGameListner(this.currentGame.gameid);
- 
+
         this.fetchGame(null);
-        
+
         this.$router.push({
           name: "home"
         });
-      
       }
     },
     async submitLike() {
