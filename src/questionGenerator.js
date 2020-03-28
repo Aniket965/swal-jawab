@@ -11,7 +11,6 @@ function randomitem(myArray) {
     return myArray[Math.floor(Math.random()*myArray.length)];
 }
 export const questionGenerator = (names) => {
-    console.log(names);
     const name = randomitem(names);
     const question = randomitem(questions);
     return question.replace('$$',name);
