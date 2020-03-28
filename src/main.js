@@ -3,22 +3,10 @@ import App from './App.vue';
 import './registerServiceWorker';
 import { store } from './store.js'
 import router from "./router/index";
- 
-const firebase = require('./firebaseConfig.js')
+
 Vue.config.productionTip = false;
 
-firebase.auth.onAuthStateChanged(async user => {
-  store.dispatch("fetchUser", user);
-    if (user) {
-      // User is signed in.
-      let details = await (await firebase.usersCollection.doc(user.uid).get()).data();
-      store.dispatch('fetchCurrentGameDetails', details)
-      router.replace('');
-    } else {
-      // No user is signed in.
-      router.replace('login');
-    }
-});
+
 new Vue({
   router,
   store,

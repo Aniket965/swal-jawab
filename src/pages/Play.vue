@@ -57,6 +57,10 @@
         v-if="currentGame.createdBy === user.data.uid"
         @click="playNextRound()"
       >Play Next Round</button>
+      <button
+        v-if="currentGame.createdBy !== user.data.uid && currentGame.isFinished"
+        @click="goToHome()"
+      >Go to Home</button>
     </div>
   </div>
 </template>
@@ -74,6 +78,22 @@ export default {
     };
   },
   methods: {
+    ...mapActions({
+      fetchGame:'fetchGame',
+      resetGameListner:'resetGameListner',
+      fetchCurrentGameDetails:'fetchCurrentGameDetails',
+    }),
+    goToHome() {
+          this.fetchCurrentGameDetails({
+          gameId: null,
+          isGameStarted: false,
+        });
+        this.resetGameListner(this.currentGame.gameid);
+        this.fetchGame(null);
+        this.$router.push({
+          name: "home"
+        });
+    }, 
     async playNextRound() {
       let totalScore = this.currentGame.gameStats.totalScore;
       const newScore = Object.fromEntries(
@@ -101,10 +121,9 @@ export default {
       await gameSessionRef
         .child(this.currentGame.gameid + "/gameStats/totalScore")
         .set(newScore);
-
-      // TODO: end game if its last round
-      // FIXME: add new round duplicate from start.vue make it one place only
-      if (this.currentGame.currentRound.num != this.currentGame.gamelength) {
+      // if its last round
+      if (this.currentGame.currentRound.num !== this.currentGame.gamelength) {
+        // FIXME: add new round duplicate from start.vue make it one place only
         let newRound = {
           num: this.currentGame.currentRound.num + 1,
           question: `what is home name of anirodh ${this.currentGame.currentRound.num}`,
@@ -124,10 +143,22 @@ export default {
         await gameSessionRef.child(this.currentGame.gameid + "/currentRound").set(newRound);
       } else {
         alert('game ended');
-        // await usersCollection.doc(this.user.data.uid).set({
-        //     currentGameId: null,
-        // });
-
+        // reset user current game
+        await usersCollection.doc(this.user.data.uid).set({
+            currentGameId: null,
+        });
+        // update game state
+        await gameSessionRef.child(this.currentGame.gameid + "/isFinished").set(true);
+        
+        // reset local store
+         this.fetchCurrentGameDetails({
+          gameId: null,
+          isGameStarted: false,
+        });
+        this.resetGameListner(this.currentGame.gameid);
+ 
+        this.fetchGame(null);
+        
         this.$router.push({
           name: "home"
         });

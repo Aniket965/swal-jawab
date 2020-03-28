@@ -2,7 +2,7 @@
   <div id="home-page">
     <button @click="signOut()" >logout</button>
     <h1>Swal Jawab 📝</h1>
-    <h2>🙏🏻 Welcome, {{user.data.displayName}}</h2>
+    <h2>🙏🏻 Welcome, {{user.data ? user.data.displayName : ''}}</h2>
     <input type="text" v-model="code" name="code" id="code">
     <button @click="join()">join game</button>
     <button @click="user.gameDetails.isGameStarted ? continueGame() : createGameSession()">{{user.gameDetails.isGameStarted ? 'continue' : 'create'}} game</button>
@@ -14,6 +14,7 @@
 import { mapGetters,mapActions } from "vuex";
 import firebase from 'firebase';
 import { gameSessionRef,usersCollection } from "../firebaseConfig";
+import { store } from '../store.js'
 export default {
   name: 'Home',
   data: function () {
@@ -21,9 +22,25 @@ export default {
       code: ''
     }
   },
+  beforeMount() {
+  firebase.auth().onAuthStateChanged(async user => {
+  store.dispatch("fetchUser", user);
+    if (user) {
+      // User is signed in.
+      let details = await (await usersCollection.doc(user.uid).get()).data();
+      store.dispatch('fetchCurrentGameDetails', details)
+    } else {
+      // No user is signed in.
+      this.$router.replace({
+        name:'login'
+      });
+    }
+});
+  },
   methods: {
     ...mapActions({
-      fetchGame:'fetchGame'
+      fetchGame:'fetchGame',
+      setGameListner:'setGameListner',
     }),
 
     async join() {
@@ -45,6 +62,7 @@ export default {
       const gameId = this.user.gameDetails.gameId;
       let gameData = await (await gameSessionRef.child(gameId).once('value')).val();
       this.fetchGame({gameData,gameId});
+      this.setGameListner(gameId);
       this.$router.push({
             name: "start"
       });
