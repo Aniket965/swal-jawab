@@ -2,7 +2,7 @@
   <div id="play-page">
     <button @click="signOut()">logout</button>
     <h1>Swal Jawab 📝</h1>
-    <h2>Round #{{currentGame.currentRound.num}}</h2>
+    <h2>Round #{{currentGame.currentRound.num}} / {{currentGame.gamelength}}</h2>
     <div v-if="currentGame.currentRound.playersAnwsered[user.data.uid].isAnwsered == false">
       <h1>Question: {{currentGame.currentRound.question}}</h1>
       <input type="text" name="anwser" id="anwser" v-model="anwser" />
