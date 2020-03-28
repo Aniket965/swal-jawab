@@ -69,6 +69,7 @@
 import { mapGetters, mapActions } from "vuex";
 import firebase from "firebase";
 import { gameSessionRef, usersCollection } from "../firebaseConfig";
+import {questionGenerator} from '../questionGenerator';
 export default {
   name: "Play",
   data: function() {
@@ -126,7 +127,7 @@ export default {
         // FIXME: add new round duplicate from start.vue make it one place only
         let newRound = {
           num: this.currentGame.currentRound.num + 1,
-          question: `what is home name of anirodh ${this.currentGame.currentRound.num}`,
+          question: questionGenerator(Object.values(this.currentGame.players).map(ele=> ele.displayName)),
           isAllAnwsered: false,
           isAllLikedAnwsered: false,
           playersAnwsered: Object.fromEntries(

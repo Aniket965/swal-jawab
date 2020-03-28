@@ -16,6 +16,7 @@
 import { mapGetters, mapActions } from "vuex";
 import firebase from "firebase";
 import { gameSessionRef, usersCollection } from "../firebaseConfig";
+import {questionGenerator} from '../questionGenerator';
 export default {
   name: "Start",
   mounted() {
@@ -27,6 +28,7 @@ export default {
   },
   methods: {
     async startGame() {
+     
       await gameSessionRef.child(this.user.gameDetails.gameId).set({
         ...this.currentGame,
         gameid:this.user.gameDetails.gameId,
@@ -41,7 +43,7 @@ export default {
         },
         currentRound: {
           num: 1,
-          question: "what is home name of anirodh",
+          question: questionGenerator(Object.values(this.currentGame.players).map(ele=> ele.displayName)),
           isAllAnwsered: false,
           isAllLikedAnwsered: false,
           playersAnwsered: Object.fromEntries(new Map(Object.values(this.currentGame.players).map(ele => {
