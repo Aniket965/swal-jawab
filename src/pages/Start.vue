@@ -37,6 +37,7 @@
       rounded
       color="var(--primaryColor)"
       dark
+      @click="endGame()"
     >End Game</v-btn>
   </h1>
 
@@ -65,8 +66,26 @@ export default {
   methods: {
     ...mapActions({
       fetchGame: "fetchGame",
-      setGameListner: "setGameListner"
+      setGameListner: "setGameListner",
+      fetchCurrentGameDetails:"fetchCurrentGameDetails"
     }),
+
+    async endGame() {
+       await usersCollection.doc(this.user.data.uid).set({
+          currentGameId: null
+        });
+
+        // reset local store
+        this.fetchCurrentGameDetails({
+          gameId: null,
+          isGameStarted: false
+        });
+
+        this.fetchGame(null);
+        this.$router.push({
+          name: "home"
+        });
+    },
     async startGame() {
       await gameSessionRef.child(`/${this.user.gameDetails.gameId}`).set({
         ...this.currentGame,

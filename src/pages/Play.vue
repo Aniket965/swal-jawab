@@ -102,27 +102,23 @@
         v-if="currentGame.currentRound.isAllAnwsered && (currentGame.currentRound.isAllLikedAnwsered)"
       >
         <h1>Score Card</h1>
-              <v-simple-table>
+        <v-simple-table>
           <template v-slot:default>
             <thead>
               <tr>
                 <th class="text-left">Player</th>
                 <th class="text-left">Total Score</th>
-                <th class="text-left">This Round </th>
-                
+                <th class="text-left">This Round</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="item in Object.values(currentGame.gameStats.totalScore)" :key="item.uid">
                 <td>
-                   <v-avatar  style="margin-right:12px"   size="36px">
-      <img
-        :src="item.photoURL"
-        :alt="item.displayName"
-      >
-    </v-avatar>
+                  <v-avatar style="margin-right:12px" size="36px">
+                    <img :src="item.photoURL" :alt="item.displayName" />
+                  </v-avatar>
                   {{ item.displayName}}
-                  </td>
+                </td>
                 <td>{{ item.score + (currentGame.currentRound.playersAnwsered[item.uid].likedby ? Object.keys(currentGame.currentRound.playersAnwsered[item.uid].likedby).length : 0)}}</td>
                 <td>+{{(currentGame.currentRound.playersAnwsered[item.uid].likedby ? Object.keys(currentGame.currentRound.playersAnwsered[item.uid].likedby).length : 0)}}</td>
               </tr>
@@ -131,7 +127,7 @@
         </v-simple-table>
 
         <v-btn
-               style="border-radius:18px;"
+          style="border-radius:18px;"
           x-large
           class="custom mt-1"
           rounded

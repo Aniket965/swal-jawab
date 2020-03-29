@@ -20,7 +20,7 @@
           id="code"
           class="code"
           label="Enter Code"
-          placeholder="Eg ABC 21"
+          placeholder="Eg ABC 211"
           filled
           rounded
           @keydown.enter="join()"
@@ -169,7 +169,7 @@ export default {
           }
         ],
         createdBy: uid,
-        gamelength: 20,
+        gamelength: 10,
         gameRounds: [],
         gameStats: {
           totalScore: {
