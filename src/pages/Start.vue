@@ -134,7 +134,7 @@ export default {
   
   background: #ececec94;
   border-radius: 10px;
-  padding: 0.1rem 2rem;
+  padding: 0.5rem 2rem;
   width: fit-content;
   max-width: 500px;
   list-style: none;
