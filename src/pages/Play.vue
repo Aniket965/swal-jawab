@@ -102,16 +102,33 @@
         v-if="currentGame.currentRound.isAllAnwsered && (currentGame.currentRound.isAllLikedAnwsered)"
       >
         <h1>Score Card</h1>
-        <table>
-          <th>Name</th>
-          <th>Total Score</th>
-          <th>This round</th>
-          <tr v-for="item in Object.values(currentGame.gameStats.totalScore)" :key="item.uid">
-            <td>{{item.displayName}}</td>
-            <td>{{item.score}}</td>
-            <td>+{{(currentGame.currentRound.playersAnwsered[item.uid].likedby ? Object.keys(currentGame.currentRound.playersAnwsered[item.uid].likedby).length : 0)}}</td>
-          </tr>
-        </table>
+              <v-simple-table>
+          <template v-slot:default>
+            <thead>
+              <tr>
+                <th class="text-left">Player</th>
+                <th class="text-left">Total Score</th>
+                <th class="text-left">This Round </th>
+                
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="item in Object.values(currentGame.gameStats.totalScore)" :key="item.uid">
+                <td>
+                   <v-avatar  style="margin-right:12px"   size="36px">
+      <img
+        :src="item.photoURL"
+        :alt="item.displayName"
+      >
+    </v-avatar>
+                  {{ item.displayName}}
+                  </td>
+                <td>{{ item.score + (currentGame.currentRound.playersAnwsered[item.uid].likedby ? Object.keys(currentGame.currentRound.playersAnwsered[item.uid].likedby).length : 0)}}</td>
+                <td>+{{(currentGame.currentRound.playersAnwsered[item.uid].likedby ? Object.keys(currentGame.currentRound.playersAnwsered[item.uid].likedby).length : 0)}}</td>
+              </tr>
+            </tbody>
+          </template>
+        </v-simple-table>
 
         <v-btn
                style="border-radius:18px;"
