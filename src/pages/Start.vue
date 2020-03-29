@@ -1,30 +1,46 @@
 <template>
   <div id="page">
     <button @click="signOut()">logout</button>
-    <Logo/>
-    <h2>code: {{currentGame.code}}</h2>
-    <p>⏲ Waiting for players to join...</p>
-    <ol>
-      <li v-for="item in currentGame.players" :key="item.uid">{{ item.displayName }}</li>
+    <Logo class="mt-2"/>
+    <h4 class="mt-2">Joining code</h4>
+    <h2 style="font-size:3rem;color:var(--primaryColor);margin:0;">{{currentGame.code}}</h2>
+    <p>🕐 Waiting for players to join...</p>
+    <ol class="center-child" style="flex-direction : column;">
+      <li class="custom-list" v-for="item in currentGame.players" :key="item.uid">
+        <div>
+                        <v-list-item-avatar>
+          <v-img :src="item.photoURL"></v-img>
+        </v-list-item-avatar>
+        </div>
+      <div style="justify-self:left;">
+        {{ item.displayName }} </div>
+        </li>
     </ol>
+    <h1>
     <v-btn
-      style="border-radius:10px;"
-      outlined
-      class="mt-1"
+      style="border-radius:18px;"
+      x-large
+      class="custom mt-1"
       rounded
       color="var(--primaryColor)"
       dark
+      filled
       @click="startGame()"
-    >start game</v-btn>
-
+    >Start Game</v-btn>
+    </h1>
+  <h1>
     <v-btn
-      style="border-radius:10px;"
+      style="border-radius:18px;"
       outlined
-      class="mt-1"
+      x-large
+      class="custom mt-1"
       rounded
       color="var(--primaryColor)"
       dark
-    >end game</v-btn>
+    >End Game</v-btn>
+  </h1>
+
+
   </div>
 </template>
 
@@ -109,5 +125,26 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style  lang="scss">
+.custom-list {
+  font-size: 1.2rem;
+  font-weight: 700;
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+  
+  background: #ececec94;
+  border-radius: 10px;
+  padding: 0.1rem 2rem;
+  width: fit-content;
+  max-width: 500px;
+  list-style: none;
+  margin-top: .5rem;
+  gap: 1rem;
+}
+.custom-list div {
+  // background: pink;
+  justify-self: center;
+  align-self: center;
+  
+}
 </style>

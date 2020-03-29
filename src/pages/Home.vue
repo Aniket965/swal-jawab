@@ -118,7 +118,8 @@ export default {
         ) {
           await gameSessionRef.child(gameId + "/players").push({
             displayName: this.user.data.displayName,
-            uid: this.user.data.uid
+            uid: this.user.data.uid,
+            photoURL:this.user.data.photoURL,
           });
         }
 
@@ -163,7 +164,8 @@ export default {
         players: [
           {
             uid: uid,
-            displayName: this.user.data.displayName
+            displayName: this.user.data.displayName,
+            photoURL:this.user.data.photoURL,
           }
         ],
         createdBy: uid,
@@ -210,6 +212,7 @@ export default {
   font-weight: 700 !important;
   text-transform: none !important;
   font-size: 1.5rem !important;
+  border-width: 2px !important;
 }
 .code .v-text-field__slot input {
   font-family: "Poppins", sans-serif !important;
