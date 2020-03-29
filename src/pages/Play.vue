@@ -1,7 +1,7 @@
 <template>
   <div id="play-page">
     <button @click="signOut()">logout</button>
-       <Logo/>
+    <Logo />
     <div class="mt-3" v-if="currentGame !== null && currentGame !== undefined">
       <h2>
         Round
@@ -21,7 +21,7 @@
               multiline
               dense
               rounded
-              label="Your Anwser"
+              label="Your Answer"
               type="text"
               name="anwser"
               id="anwser"
@@ -32,9 +32,9 @@
         </div>
 
         <v-btn
-          style="border-radius:10px;"
-          outlined
-          class="mt-1"
+          style="border-radius:18px;"
+          x-large
+          class="custom mt-1"
           rounded
           color="var(--primaryColor)"
           dark
@@ -45,15 +45,19 @@
       <div
         v-if="currentGame.currentRound.playersAnwsered[user.data.uid].isAnwsered && !currentGame.currentRound.isAllAnwsered"
       >
-        <h1>Waiting for everyone to anwser</h1>
-        <ol>
+        <p>🕐 Waiting for everyone to answer</p>
+        <ol class="center-child" style="flex-direction : column;">
           <li
+            class="custom-list"
             v-for="item in Object.values(currentGame.currentRound.playersAnwsered)"
             :key="item.uid"
           >
-            <span v-if="item.isAnwsered">✅</span>
-            <span v-if="!item.isAnwsered">🕐</span>
-            {{ item.displayName }}
+            <div>
+              <v-list-item-avatar>
+                <v-img :src="item.photoURL"></v-img>
+              </v-list-item-avatar>
+            </div>
+            <div style="justify-self:left;">{{ item.displayName }} {{item.isAnwsered? ' ✅':' 🕐'}}</div>
           </li>
         </ol>
       </div>
@@ -61,33 +65,38 @@
       <div
         v-if="currentGame.currentRound.isAllAnwsered && !(currentGame.currentRound.isAllLikedAnwsered)"
       >
-        <ul>
-          <li v-for="item in Object.values(currentGame.currentRound.anwsers)" :key="item.uid">
-            <input
-              v-if="item.writtenBy !== user.data.uid"
-              type="radio"
-              :id="item.writtenBy"
-              v-model="likedId"
-              name="like"
-              :value="item.id"
-            />
-            <label for="contactChoice3">{{ item.text }}</label>
-          </li>
-
+        <ol class="center-child" style="flex-direction : column;">
+          <v-radio-group v-model="likedId" :mandatory="true">
+            <li
+              class="custom-list"
+              style="width:fit-content;"
+              v-for="item in Object.values(currentGame.currentRound.anwsers)"
+              :key="item.uid"
+            >
+              <v-radio
+                color="var(--primaryColor)"
+                :disabled="item.writtenBy === user.data.uid"
+                :id="item.writtenBy"
+                name="like"
+                :value="item.id"
+              ></v-radio>
+              <p style="word-wrap:break-word;max-width:200px">{{item.text}}</p>
+            </li>
+          </v-radio-group>
           <v-btn
-            style="border-radius:10px;"
-            outlined
-            class="mt-1"
+            style="border-radius:18px;"
+            x-large
+            class="custom mt-1"
             rounded
             color="var(--primaryColor)"
             dark
             v-if="currentGame.currentRound.playersAnwsered[user.data.uid].isDoneLiking === false"
             @click="submitLike()"
-          >submit</v-btn>
+          >Submit</v-btn>
           <p
             v-if="this.currentGame.currentRound.likes"
           >Number of friends Left liking: {{ Object.keys(this.currentGame.currentRound.playersAnwsered).length - Object.keys(this.currentGame.currentRound.likes).length }}</p>
-        </ul>
+        </ol>
       </div>
       <div
         v-if="currentGame.currentRound.isAllAnwsered && (currentGame.currentRound.isAllLikedAnwsered)"
@@ -105,9 +114,9 @@
         </table>
 
         <v-btn
-          style="border-radius:10px;"
-          outlined
-          class="mt-1"
+               style="border-radius:18px;"
+          x-large
+          class="custom mt-1"
           rounded
           color="var(--primaryColor)"
           dark
@@ -134,11 +143,11 @@ import { mapGetters, mapActions } from "vuex";
 import firebase from "firebase";
 import { gameSessionRef, usersCollection } from "../firebaseConfig";
 import { questionGenerator } from "../questionGenerator";
-import Logo from '../components/logo.vue';
+import Logo from "../components/logo.vue";
 export default {
   name: "Play",
-    components: {
-    Logo:Logo,
+  components: {
+    Logo: Logo
   },
   data: function() {
     return {

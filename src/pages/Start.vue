@@ -136,7 +136,7 @@ export default {
   border-radius: 10px;
   padding: 0.5rem 2rem;
   width: fit-content;
-  max-width: 500px;
+  max-width: 300px;
   list-style: none;
   margin-top: .5rem;
   gap: 1rem;
