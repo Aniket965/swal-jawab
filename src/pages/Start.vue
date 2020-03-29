@@ -1,7 +1,7 @@
 <template>
   <div id="page">
     <button @click="signOut()">logout</button>
-    <h1>Swal Jawab 📝</h1>
+    <Logo/>
     <h2>code: {{currentGame.code}}</h2>
     <p>⏲ Waiting for players to join...</p>
     <ol>
@@ -33,8 +33,12 @@ import { mapGetters, mapActions } from "vuex";
 import firebase from "firebase";
 import { gameSessionRef, usersCollection } from "../firebaseConfig";
 import { questionGenerator } from "../questionGenerator";
+import Logo from '../components/logo.vue';
 export default {
   name: "Start",
+    components: {
+    Logo:Logo,
+  },
   mounted() {
     if (this.currentGame.isStarted === true) {
       this.$router.push({

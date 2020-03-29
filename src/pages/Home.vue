@@ -4,7 +4,8 @@
       <div class="box-1"></div>
       <div class="box-2"></div>
     </div> -->
-    <h1 class="logo mt-5">Swal Jawab 📝</h1>
+    <Logo class="mt-5" />
+
     <div class="header">
       <h4>🙏🏻Welcome Back,</h4>
       <div class="name-heading">{{user.data ? user.data.displayName : ''}}</div>
@@ -66,8 +67,12 @@ import { mapGetters, mapActions } from "vuex";
 import firebase from "firebase";
 import { gameSessionRef, usersCollection } from "../firebaseConfig";
 import { store } from "../store.js";
+import Logo from '../components/logo.vue';
 export default {
   name: "Home",
+  components: {
+    Logo:Logo,
+  },
   data: function() {
     return {
       code: ""

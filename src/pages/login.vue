@@ -1,6 +1,6 @@
 <template>
   <div id="login-page">
-    <h1>Swal Jawab 📝</h1>
+     <Logo/>
     <h2>Login</h2>
        <v-btn
           style="border-radius:18px;"
@@ -17,9 +17,12 @@
 
 <script>
 import firebase from 'firebase';
-
+import Logo from '../components/logo.vue';
 export default {
   name: 'Login',
+    components: {
+    Logo:Logo,
+  },
   methods : {
     googleLogin() {
       const provider = new firebase.auth.GoogleAuthProvider();

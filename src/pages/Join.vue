@@ -1,7 +1,7 @@
 <template>
   <div id="start-page">
     <button @click="signOut()">logout</button>
-    <h1>Swal Jawab 📝</h1>
+     <Logo/>
     <p>⏲ Waiting for players to join...</p>
     <ol>
       <li v-for="item in currentGame.players" :key="item.uid">{{ item.displayName }}</li>
@@ -14,8 +14,12 @@
 import { mapGetters, mapActions } from "vuex";
 import firebase from "firebase";
 import { gameSessionRef, usersCollection } from "../firebaseConfig";
+import Logo from '../components/logo.vue';
 export default {
   name: "Join",
+    components: {
+    Logo:Logo,
+  },
     beforeMount() {
     if (this.currentGame.isStarted) {
       this.$router.push({
