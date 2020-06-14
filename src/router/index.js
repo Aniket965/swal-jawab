@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Login from '../pages/Login.vue';
+import Login from '../pages/login.vue';
 import Home from '../pages/Home.vue';
 import Start from '../pages/Start.vue';
 import Join from  '../pages/Join.vue';
@@ -22,7 +22,7 @@ const router = new Router({
         component: Home
     },
     {
-        path: '/start',
+        path: '/start/:id',
         name: 'start',
         component: Start
     },
@@ -32,7 +32,7 @@ const router = new Router({
         component: Join
     },
     {
-        path: '/play',
+        path: '/play/:id',
         name: 'play',
         component: Play
     }

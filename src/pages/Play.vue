@@ -1,8 +1,9 @@
+
 <template>
-  <div id="play-page">
+  <div id="play-page" >
     <button @click="signOut()">logout</button>
     <Logo />
-    <div class="mt-3" v-if="currentGame !== null && currentGame !== undefined">
+    <div class="mt-3" v-if="currentGame.currentRound !== undefined">
       <h2>
         Round
         <span style="color:var(--primaryColor)">#{{currentGame.currentRound.num}}</span>
@@ -168,9 +169,30 @@ export default {
       likedId: ""
     };
   },
+  beforeMount() {
+    let that = this;
+    firebase.auth().onAuthStateChanged(async user => {
+      that.fetchUser(user);
+      if (user) {
+        // User is signed in.
+        let details = await (await usersCollection.doc(user.uid).get()).data();
+        that.getGame(this.$route.params.id);
+         that.fetchCurrentGameDetails({currentGameId:this.$route.params.id});
+      } else {
+        // No user is signed in.
+        this.$router.replace({
+          name: "login"
+        });
+      }
+    });
+    console.log("hello",typeof(this.currentGame))
+   
+  },
   methods: {
     ...mapActions({
       fetchGame: "fetchGame",
+      fetchUser: "fetchUser",
+      getGame:"getGame",
       resetGameListner: "resetGameListner",
       fetchCurrentGameDetails: "fetchCurrentGameDetails"
     }),

@@ -147,7 +147,8 @@ export default {
       ).val();
       this.fetchGame({ gameData, gameId });
       this.$router.push({
-        name: "start"
+        name: "start",
+         params: { id: gameId }
       });
     },
     async createGameSession() {
@@ -184,7 +185,8 @@ export default {
       let gameData = await (await res.once("value")).val();
       this.fetchGame({ gameData, gameId: res.key });
       this.$router.push({
-        name: "start"
+        name: "start",
+        params: { id: res.key }
       });
     },
     signOut() {

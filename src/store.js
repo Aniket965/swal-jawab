@@ -66,6 +66,13 @@ export const store = new Vuex.Store({
         commit("SET_GAME", snapshot.val());
       });
     },
+    getGame({ commit },gameId) {
+      console.log(gameId);
+      gameSessionRef.child(gameId).once("value", snapshot => {
+        console.log(snapshot.val());
+        commit("SET_GAME", snapshot.val());
+      });
+    },
     resetGameListner({ commit },gameId) {
       gameSessionRef.child(gameId).off("value");
     },
