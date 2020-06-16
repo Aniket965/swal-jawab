@@ -176,7 +176,7 @@ export default {
       if (user) {
         // User is signed in.
         let details = await (await usersCollection.doc(user.uid).get()).data();
-        that.getGame(this.$route.params.id);
+        that.setGameListner(this.$route.params.id);
          that.fetchCurrentGameDetails({currentGameId:this.$route.params.id});
       } else {
         // No user is signed in.
@@ -192,7 +192,7 @@ export default {
     ...mapActions({
       fetchGame: "fetchGame",
       fetchUser: "fetchUser",
-      getGame:"getGame",
+      setGameListner:"setGameListner",
       resetGameListner: "resetGameListner",
       fetchCurrentGameDetails: "fetchCurrentGameDetails"
     }),

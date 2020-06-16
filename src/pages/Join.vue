@@ -32,14 +32,16 @@ export default {
     beforeMount() {
     if (this.currentGame.isStarted) {
       this.$router.push({
-        name: "play"
+        name: "play",
+        params: {id: this.currentGame.gameid}
       });
     }
   },
   updated() {
      if (this.currentGame.isStarted) {
       this.$router.push({
-        name: "play"
+        name: "play",
+        params:{id: this.currentGame.gameid}
       });
     }
   },
