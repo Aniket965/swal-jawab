@@ -137,6 +137,17 @@
           v-if="currentGame.createdBy === user.data.uid"
           @click="playNextRound()"
         >Play Next Round</v-btn>
+        
+        <v-btn
+          style="border-radius:18px; margin-left:1rem;"
+          x-large
+          class="custom mt-1"
+          rounded
+          color="var(--primaryColor)"
+          dark
+          v-if="currentGame.createdBy === user.data.uid"
+          @click="endGame()"
+        >End Game</v-btn>
         <v-btn
           style="border-radius:10px;"
           outlined
@@ -207,6 +218,17 @@ export default {
         name: "home"
       });
     },
+    async endGame() {
+       await usersCollection.doc(this.user.data.uid).set({
+          currentGameId: null
+        });
+        // update game state
+        await gameSessionRef
+          .child(this.currentGame.gameid + "/isFinished")
+          .set(true);
+
+      this.goToHome();
+    },
     async playNextRound() {
       let totalScore = this.currentGame.gameStats.totalScore;
       this.likedId = "";
@@ -265,26 +287,7 @@ export default {
       } else {
         alert("game ended");
         // reset user current game
-        await usersCollection.doc(this.user.data.uid).set({
-          currentGameId: null
-        });
-        // update game state
-        await gameSessionRef
-          .child(this.currentGame.gameid + "/isFinished")
-          .set(true);
-
-        // reset local store
-        this.fetchCurrentGameDetails({
-          gameId: null,
-          isGameStarted: false
-        });
-        this.resetGameListner(this.currentGame.gameid);
-
-        this.fetchGame(null);
-
-        this.$router.push({
-          name: "home"
-        });
+        this.endGame();
       }
     },
     async submitLike() {
